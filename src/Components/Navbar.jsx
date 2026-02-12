@@ -1,19 +1,19 @@
-import React, { use } from 'react'
-import { Link, Navigate } from 'react-router-dom'
+import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Navbar = () => {
     const user = { name: "John Doe" }
-    const Navigate = useNavigate()
+    const navigate = useNavigate()
 
     const logoutUser = () => {
-        Navigate('/')
+        navigate('/')
     }
 
   return (
     <div className='shadow bg-white'>
         <nav className='flex items-center justify-between max-w-7x1 mx-auto px-4 py-3.5 
         text-slate-800 transition-all'>
-        <Link>
+        <Link to='/'>
             <img src="/logo.svg" alt="logo" className='h-11 w-auto'/>
         </Link>
         <div className='flex items-center gap-4 text-sm'>
@@ -22,8 +22,7 @@ const Navbar = () => {
             rounded-full active:scale-95 transition-all'>Logout</button>
         </div>
         </nav>
-
-    </div>
+     </div>
   )
 }
 
