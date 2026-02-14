@@ -1,5 +1,3 @@
-// 1. Added useState and useEffect to imports
-// 2. Added Trash2 and Pencil (correct Lucide names) to imports
 import { FilePenLineIcon, PlusIcon, UploadCloudIcon, Trash2, Pencil } from 'lucide-react'
 import React, { useState, useEffect } from 'react' // Changed 'use' to 'useState, useEffect'
 import { dummyResumeData } from '../assets/assets'
@@ -19,7 +17,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className='max-w-7xl mx-auto px-4 py-8'> {/* Fixed typo: 7x1 to 7xl */}
+      <div className='max-w-7xl mx-auto px-4 py-8'>
         <p className='text-2xl font-medium mb-6 bg-gradient-to-r from-slate-600 to-slate-700 
         bg-clip-text text-transparent sm:hidden'>Welcome, John Doe</p>
 
@@ -63,7 +61,6 @@ const Dashboard = () => {
                   Updated on {new Date(resume.updatedAt).toLocaleDateString()}
                 </p>
                 
-                {/* Fixed component names here: Trash2 and Pencil */}
                 <div className='absolute top-1 right-1 group-hover:flex items-center hidden'>
                   <Trash2 className='size-7 p-1.5 hover:bg-white/50 rounded text-slate-700 transition-colors'/>
                   <Pencil className='size-7 p-1.5 hover:bg-white/50 rounded text-slate-700 transition-colors'/>
