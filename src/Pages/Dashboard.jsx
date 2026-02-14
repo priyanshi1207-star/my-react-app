@@ -1,26 +1,27 @@
-import { FilePenLineIcon, PlusIcon, UploadCloudIcon } from 'lucide-react'
-import React, { use } from 'react'
+// 1. Added useState and useEffect to imports
+// 2. Added Trash2 and Pencil (correct Lucide names) to imports
+import { FilePenLineIcon, PlusIcon, UploadCloudIcon, Trash2, Pencil } from 'lucide-react'
+import React, { useState, useEffect } from 'react' // Changed 'use' to 'useState, useEffect'
 import { dummyResumeData } from '../assets/assets'
 
 const Dashboard = () => {
-
   const colors = ["#9333ea", "#d97706", "#dc2626", "#0284c7", "#16a34a"]
   const [allResumes, setAllResumes] = useState([])
 
   const loadAllResumes = async () => {
-    setAllResumes(dummyResumeData)
+    // Ensure dummyResumeData exists and is an array
+    setAllResumes(dummyResumeData || [])
   }
 
   useEffect(() => {
     loadAllResumes()
   }, [])
 
-
   return (
     <div>
-        <div className='max-w-7x1 mx-auto px-4 py-8'>
-        <p className='text-2x1 font-medium mb-6 bg-gradient-to-r from-slate-600 to-slate-700 
-        bg-clip-text text-transparent sm:hidden'>Welcome, Joe Doe</p>
+      <div className='max-w-7xl mx-auto px-4 py-8'> {/* Fixed typo: 7x1 to 7xl */}
+        <p className='text-2xl font-medium mb-6 bg-gradient-to-r from-slate-600 to-slate-700 
+        bg-clip-text text-transparent sm:hidden'>Welcome, John Doe</p>
 
         <div className='flex gap-4'>
           <button className='w-full bg-white sm:max-w-36 h-48 flex flex-col items-center
@@ -40,7 +41,6 @@ const Dashboard = () => {
             bg-gradient-to-br from-purple-300 to-purple-500 text-white rounded-full'/>
             <p className='text-sm group-hover:text-purple-600 transition-all duration-300'>Upload Resume</p>
           </button>
-
         </div>
 
         <hr className='border-slate-300 my-6 sm:w-[360px]'/>
@@ -62,15 +62,17 @@ const Dashboard = () => {
                 text-center' style={{color: baseColor + '90'}}>
                   Updated on {new Date(resume.updatedAt).toLocaleDateString()}
                 </p>
+                
+                {/* Fixed component names here: Trash2 and Pencil */}
                 <div className='absolute top-1 right-1 group-hover:flex items-center hidden'>
-                  <TrashIcon className='size-7 p-1.5 hover:bg-white/50 rounded text-slate-700 transition-colors'/>
-                  <PencilIcon className='size-7 p-1.5 hover:bg-white/50 rounded text-slate-700 transition-colors'/>
-                  </div>
+                  <Trash2 className='size-7 p-1.5 hover:bg-white/50 rounded text-slate-700 transition-colors'/>
+                  <Pencil className='size-7 p-1.5 hover:bg-white/50 rounded text-slate-700 transition-colors'/>
+                </div>
               </button>
             )
           })}
-          </div>
         </div>
+      </div>
     </div>
   )
 }
