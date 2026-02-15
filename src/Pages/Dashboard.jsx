@@ -38,14 +38,12 @@ const Dashboard = () => {
   }
 
   const deleteResume = async (resumeId) => {
-    const confirm = window.confirm("Are you sure you want to delete this resume?")
+    const confirm = window.confirm("Are you sure want to delete this resume?")
     if (confirm) {
-      if (confirm) {
-        // Perform delete action here (e.g., API call)
-        setAllResumes(prev => prev.filter(resume => resume._id !== resumeId))
-      }
+      setAllResumes(prev => prev.filter(resume => resume._id !== resumeId))
     }
   }
+
 
   useEffect(() => {
     loadAllResumes()
@@ -99,7 +97,7 @@ const Dashboard = () => {
                 </p>
 
                 <div onClick={e => e.stopPropagation()} className='absolute top-1 right-1 group-hover:flex items-center hidden'>
-                  <Trash2 className='size-7 p-1.5 hover:bg-white/50 rounded text-slate-700 transition-colors' />
+                  <Trash2 onClick={() => deleteResume(resume._id)} className='size-7 p-1.5 hover:bg-white/50 rounded text-slate-700 transition-colors' />
                   <Pencil onClick={() => { setShowEditResumeId(resume._id); setTitle(resume.title) }}
                     className='size-7 p-1.5 hover:bg-white/50 rounded text-slate-700 transition-colors' />
                 </div>
