@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react' // Fix: Added useEffect and useState
 import { Link, useParams } from 'react-router-dom'
 import { dummyResumeData } from '../assets/assets'
-import { ArrowLeftIcon } from 'lucide-react'
+import { ArrowLeftIcon, AwardIcon, BriefcaseIcon, FileText, FileTextIcon, FolderIcon, GraduationCapIcon, HeartIcon, LanguagesIcon, SparklesIcon, User, UserIcon } from 'lucide-react'
 
 const ResumeBuilder = () => {
 
@@ -32,6 +32,23 @@ const ResumeBuilder = () => {
     }
   }
 
+  const [activeSectionIndex, setActiveSectionIndex] = useState(0)
+  const [removeBackground, setRemoveBackground] = useState(false);
+
+  const sections = [
+    { id: 'personal_info', name: 'Personal Info', icon: UserIcon },
+    { id: 'professional_summary', name: 'Professional Summary', icon: FileTextIcon },
+    { id: 'work_experience', name: 'Work Experience', icon: BriefcaseIcon },
+    { id: 'education', name: 'Education', icon: GraduationCapIcon },
+    { id: 'skills', name: 'Skills', icon: SparklesIcon },
+    { id: 'projects', name: 'Projects', icon: FolderIcon },
+    { id: 'certifications', name: 'Certifications', icon: AwardIcon },
+    { id: 'languages', name: 'Languages', icon: LanguagesIcon },
+    { id: 'interests', name: 'Interests', icon: HeartIcon },
+  ]
+
+  const activeSection = sections[activeSectionIndex]
+
   useEffect(() => {
     loadExistingResume()
   }, [resumeId]) // Added resumeId to dependency array for best practice
@@ -49,8 +66,31 @@ const ResumeBuilder = () => {
       <div className='max-w-7xl mx-auto px-4 pb-8'>
         <div className='grid lg:grid-cols-12 gap-8'>
           {/* Left - Resume Editor */}
-          <div>
+          <div className='lg:col-span-5'>
+            <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 pt-1 relative overflow-hidden'>
 
+              {/* Progress Bar Background */}
+              <div className='absolute top-0 left-0 right-0 h-1 bg-gray-100'></div>
+
+              {/* Animated Progress Bar Fill */}
+              <div
+                className='absolute top-0 left-0 h-1 bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500 ease-in-out'
+                style={{ width: `${((activeSectionIndex + 1) / sections.length) * 100}%` }}
+              ></div>
+
+              <div className='mt-6'>
+                {/* Section Header */}
+                <div className='flex items-center gap-3 mb-6'>
+                  <div className='p-2 bg-slate-100 rounded-lg text-slate-700'>
+                    <activeSection.icon className='size-6' />
+                  </div>
+                  <h2 className='text-xl font-bold text-slate-800'>{activeSection.name}</h2>
+                </div>
+
+                {/* Form Content will go here */}
+                <p className='text-slate-500'>Editor content for {activeSection.name} goes here...</p>
+              </div>
+            </div>
           </div>
           {/* Right - Resume Preview */}
         </div>
