@@ -37,6 +37,16 @@ const Dashboard = () => {
     setShowEditResumeId('')
   }
 
+  const deleteResume = async (resumeId) => {
+    const confirm = window.confirm("Are you sure you want to delete this resume?")
+    if (confirm) {
+      if (confirm) {
+        // Perform delete action here (e.g., API call)
+        setAllResumes(prev => prev.filter(resume => resume._id !== resumeId))
+      }
+    }
+  }
+
   useEffect(() => {
     loadAllResumes()
   }, [])
