@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react' // Fix: Added useEffect and useState
 import { Link, useParams } from 'react-router-dom'
 import { dummyResumeData } from '../assets/assets'
-import { ArrowLeftIcon, AwardIcon, BriefcaseIcon, ChevronLeft, FileText, FileTextIcon, FolderIcon, GraduationCapIcon, HeartIcon, LanguagesIcon, SparklesIcon, User, UserIcon } from 'lucide-react'
+import { ArrowLeftIcon, AwardIcon, BriefcaseIcon, ChevronLeft, ChevronRight, FileText, FileTextIcon, FolderIcon, GraduationCapIcon, HeartIcon, LanguagesIcon, SparklesIcon, User, UserIcon } from 'lucide-react'
 
 const ResumeBuilder = () => {
 
@@ -81,11 +81,21 @@ const ResumeBuilder = () => {
                 <div></div>
                 <div className='flex items-center'>
                   {activeSectionIndex !== 0 && (
-                    <button className='flex items-center gap-1 p-3 rounded-lg
-                    text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all'>
-                      <ChevronLeft className='size-4' />
+                    <button onClick={() => setActiveSectionIndex(prevIndex => Math.max(0, prevIndex - 1))}
+                      className='flex items-center gap-1 p-3 rounded-lg
+                    text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all'
+                      disabled={activeSectionIndex === 0}>
+                      <ChevronLeft className='size-4' /> Previous
                     </button>
                   )}
+                  <button onClick={() => setActiveSectionIndex(prevIndex => Math.min(sections.length - 1,
+                    prevIndex + 1))}
+                    className={`flex items-center gap-1 p-3 rounded-lg text-sm font-medium 
+                      text-gray-600 hover:bg-gray-50 transition-all 
+                        ${activeSectionIndex === sections.length - 1 && 'opacity-50'}`}
+                    disabled={activeSectionIndex === sections.length - 1}>
+                    <ChevronRight className='size-4' /> Next
+                  </button>
                 </div>
               </div>
             </div>
