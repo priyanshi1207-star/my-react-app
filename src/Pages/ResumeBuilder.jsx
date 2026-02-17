@@ -78,25 +78,13 @@ const ResumeBuilder = () => {
                 style={{ width: `${((activeSectionIndex + 1) / sections.length) * 100}%` }}
               ></div>
 
-              <div className='mt-6'>
-                {/* Section Header */}
-                <div className='flex items-center gap-3 mb-6'>
-                  <div className='p-2 bg-slate-100 rounded-lg text-slate-700'>
-                    <activeSection.icon className='size-6' />
-                  </div>
-                  <h2 className='text-xl font-bold text-slate-800'>{activeSection.name}</h2>
-                </div>
-
-                {/* Form Content will go here */}
-                <p className='text-slate-500'>Editor content for {activeSection.name} goes here...</p>
-              </div>
             </div>
           </div>
-          {/* Right - Resume Preview */}
         </div>
+        {/* Right - Resume Preview */}
       </div>
-
     </div>
+
   )
 }
 
