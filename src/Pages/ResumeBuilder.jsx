@@ -77,7 +77,10 @@ const ResumeBuilder = () => {
                 className='absolute top-0 left-0 h-1 bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500 ease-in-out'
                 style={{ width: `${((activeSectionIndex + 1) / sections.length) * 100}%` }}
               ></div>
+              {/* Section Tabs */}
+              <div className='flex justify-between items-center'>
 
+              </div>
             </div>
           </div>
         </div>
