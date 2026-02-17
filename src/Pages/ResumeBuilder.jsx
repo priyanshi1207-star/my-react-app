@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react' // Fix: Added useEffect and useState
 import { Link, useParams } from 'react-router-dom'
 import { dummyResumeData } from '../assets/assets'
-import { ArrowLeftIcon, AwardIcon, BriefcaseIcon, FileText, FileTextIcon, FolderIcon, GraduationCapIcon, HeartIcon, LanguagesIcon, SparklesIcon, User, UserIcon } from 'lucide-react'
+import { ArrowLeftIcon, AwardIcon, BriefcaseIcon, ChevronLeft, FileText, FileTextIcon, FolderIcon, GraduationCapIcon, HeartIcon, LanguagesIcon, SparklesIcon, User, UserIcon } from 'lucide-react'
 
 const ResumeBuilder = () => {
 
@@ -62,28 +62,37 @@ const ResumeBuilder = () => {
           <ArrowLeftIcon className='size-4' />Back to Dashboard
         </Link>
       </div>
-
       <div className='max-w-7xl mx-auto px-4 pb-8'>
         <div className='grid lg:grid-cols-12 gap-8'>
           {/* Left - Resume Editor */}
-          <div className='lg:col-span-5'>
-            <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 pt-1 relative overflow-hidden'>
-
+          <div className='relative lg:col-span-5 rounded-lg overflow-hidden'>
+            <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 pt-1'>
               {/* Progress Bar Background */}
-              <div className='absolute top-0 left-0 right-0 h-1 bg-gray-100'></div>
+              <hr className='absolute top-0 left-0 right-0 border-2 border-gray-200' />
 
               {/* Animated Progress Bar Fill */}
               <div
                 className='absolute top-0 left-0 h-1 bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500 ease-in-out'
-                style={{ width: `${((activeSectionIndex + 1) / sections.length) * 100}%` }}
+                style={{ width: `${((activeSectionIndex * 100) / sections.length) - 1}%` }}
               ></div>
               {/* Section Tabs */}
-              <div className='flex justify-between items-center'>
-
+              <div className='flex justify-between items-center mb-6 border-b
+              border-gray-300 py-1'>
+                <div></div>
+                <div className='flex items-center'>
+                  {activeSectionIndex !== 0 && (
+                    <button className='flex items-center gap-1 p-3 rounded-lg
+                    text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all'>
+                      <ChevronLeft className='size-4' />
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+
         {/* Right - Resume Preview */}
       </div>
     </div>
