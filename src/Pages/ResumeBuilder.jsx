@@ -100,6 +100,9 @@ const ResumeBuilder = () => {
               </div>
               {/* Form Section */}
               <div className='space-y-6'>
+                {activeSection.id === 'personal_info' && (
+                  <div></div>
+                )}
 
               </div>
 
