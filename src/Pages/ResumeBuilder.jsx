@@ -108,9 +108,7 @@ const ResumeBuilder = () => {
                     setRemoveBackground={setRemoveBackground}
                   />
                 )}
-
               </div>
-
             </div>
           </div>
         </div>
