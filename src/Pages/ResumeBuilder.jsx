@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react' // Fix: Added useEffect and useState
+import React, { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { dummyResumeData } from '../assets/assets'
-import { ArrowLeftIcon, AwardIcon, BriefcaseIcon, ChevronLeft, ChevronRight, FileText, FileTextIcon, FolderIcon, GraduationCapIcon, HeartIcon, LanguagesIcon, SparklesIcon, User, UserIcon } from 'lucide-react'
+import { ArrowLeftIcon, AwardIcon, BriefcaseIcon, ChevronLeft, ChevronRight, FileTextIcon, FolderIcon, GraduationCapIcon, HeartIcon, LanguagesIcon, SparklesIcon, UserIcon } from 'lucide-react'
 import PersonalInfoForm from '../Components/PersonalInfoForm'
+import ResumePreview from '../Components/ResumePreview'
 
 const ResumeBuilder = () => {
-
   const { resumeId } = useParams()
 
-  const [resumeData, setResumeData] = useState({ // Use the imported useState
+  const [resumeData, setResumeData] = useState({
     _id: '',
     title: '',
     personal_info: {},
@@ -24,14 +24,6 @@ const ResumeBuilder = () => {
     accent_color: "#3b82f6",
     public: false,
   })
-
-  const loadExistingResume = async () => {
-    const resume = dummyResumeData.find(resume => resume._id === resumeId)
-    if (resume) {
-      setResumeData(resume)
-      document.title = resume.title
-    }
-  }
 
   const [activeSectionIndex, setActiveSectionIndex] = useState(0)
   const [removeBackground, setRemoveBackground] = useState(false);
@@ -50,82 +42,88 @@ const ResumeBuilder = () => {
 
   const activeSection = sections[activeSectionIndex]
 
+  const loadExistingResume = async () => {
+    const resume = dummyResumeData.find(resume => resume._id === resumeId)
+    if (resume) {
+      setResumeData(resume)
+      document.title = resume.title
+    }
+  }
+
   useEffect(() => {
     loadExistingResume()
-  }, [resumeId]) // Added resumeId to dependency array for best practice
+  }, [resumeId])
 
   return (
     <div className='min-h-screen bg-slate-50'>
-
       <div className='max-w-7xl mx-auto px-4 py-6'>
-        <Link to={'/app'} className='inline-flex gap-2 items-center text-slate-500
-        hover:text-slate-700 transition-all font-medium'>
+        <Link to={'/app'} className='inline-flex gap-2 items-center text-slate-500 hover:text-slate-700 transition-all font-medium'>
           <ArrowLeftIcon className='size-4' />Back to Dashboard
         </Link>
       </div>
-      <div className='max-w-7xl mx-auto px-4 pb-8'>
-        <div className='grid lg:grid-cols-12 gap-8'>
-          {/* Left - Resume Editor */}
-          <div className='relative lg:col-span-5 rounded-lg overflow-hidden'>
-            <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 pt-1'>
-              {/* Progress Bar Background */}
-              <hr className='absolute top-0 left-0 right-0 border-2 border-gray-200' />
 
-              {/* Animated Progress Bar Fill */}
+      <div className='max-w-7xl mx-auto px-4 pb-8'>
+        {/* Main Grid Container */}
+        <div className='grid lg:grid-cols-12 gap-8'>
+
+          {/* Left - Resume Editor */}
+          <div className='relative lg:col-span-5'>
+            <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 pt-1 overflow-hidden relative'>
+              {/* Progress Bar */}
+              <hr className='absolute top-0 left-0 right-0 border-2 border-gray-100' />
               <div
                 className='absolute top-0 left-0 h-1 bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500 ease-in-out'
-                style={{ width: `${((activeSectionIndex * 100) / sections.length) - 1}%` }}
+                style={{ width: `${((activeSectionIndex + 1) * 100) / sections.length}%` }}
               ></div>
-              {/* Section Tabs */}
-              <div className='flex justify-between items-center mb-6 border-b
-              border-gray-300 py-1'>
-                <div></div>
+
+              {/* Navigation Tabs */}
+              <div className='flex justify-between items-center mb-6 border-b border-gray-300 py-1 mt-4'>
+                <div className='flex items-center gap-2'>
+                  <activeSection.icon className='size-5 text-gray-500' />
+                  <span className='font-medium text-gray-700'>{activeSection.name}</span>
+                </div>
                 <div className='flex items-center'>
                   {activeSectionIndex !== 0 && (
-                    <button onClick={() => setActiveSectionIndex(prevIndex => Math.max(0, prevIndex - 1))}
-                      className='flex items-center gap-1 p-3 rounded-lg
-                    text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all'
-                      disabled={activeSectionIndex === 0}>
+                    <button onClick={() => setActiveSectionIndex(prev => Math.max(0, prev - 1))}
+                      className='flex items-center gap-1 p-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all'>
                       <ChevronLeft className='size-4' /> Previous
                     </button>
                   )}
-                  <button onClick={() => setActiveSectionIndex(prevIndex => Math.min(sections.length - 1,
-                    prevIndex + 1))}
-                    className={`flex items-center gap-1 p-3 rounded-lg text-sm font-medium 
-                      text-gray-600 hover:bg-gray-50 transition-all 
-                        ${activeSectionIndex === sections.length - 1 && 'opacity-50'}`}
+                  <button onClick={() => setActiveSectionIndex(prev => Math.min(sections.length - 1, prev + 1))}
+                    className={`flex items-center gap-1 p-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all ${activeSectionIndex === sections.length - 1 && 'opacity-50'}`}
                     disabled={activeSectionIndex === sections.length - 1}>
-                    <ChevronRight className='size-4' /> Next
+                    Next <ChevronRight className='size-4' />
                   </button>
                 </div>
               </div>
-              {/* Form Section */}
+
+              {/* Dynamic Form Content */}
               <div className='space-y-6'>
                 {activeSection.id === 'personal_info' && (
-                  <PersonalInfoForm data={resumeData.personal_info}
+                  <PersonalInfoForm
+                    data={resumeData.personal_info}
                     onChange={(data) => setResumeData(prev => ({ ...prev, personal_info: data }))}
                     removeBackground={removeBackground}
                     setRemoveBackground={setRemoveBackground}
                   />
                 )}
+                {/* Other section forms would be added here */}
               </div>
             </div>
           </div>
-        </div>
 
-
-        {/* Right - Resume Preview */}
-        <div className='lg:col-span-7 max-lg:mt-6'>
-          <div>
-            {/* Buttons */}
+          {/* Right - Resume Preview (Now inside the grid) */}
+          <div className='lg:col-span-7 max-lg:mt-6 sticky top-6 h-fit'>
+            <ResumePreview
+              data={resumeData}
+              template={resumeData.template}
+              accentColor={resumeData.accent_color}
+            />
           </div>
-
-          {/* Resume Preview */}
 
         </div>
       </div>
     </div>
-
   )
 }
 
