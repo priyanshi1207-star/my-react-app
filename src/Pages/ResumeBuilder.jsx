@@ -4,6 +4,7 @@ import { dummyResumeData } from '../assets/assets'
 import { ArrowLeftIcon, AwardIcon, BriefcaseIcon, ChevronLeft, ChevronRight, FileTextIcon, FolderIcon, GraduationCapIcon, HeartIcon, LanguagesIcon, SparklesIcon, UserIcon } from 'lucide-react'
 import PersonalInfoForm from '../Components/PersonalInfoForm'
 import ResumePreview from '../Components/ResumePreview'
+import TemplateSelector from '../Components/TemplateSelector'
 
 const ResumeBuilder = () => {
   const { resumeId } = useParams()
@@ -77,27 +78,40 @@ const ResumeBuilder = () => {
               ></div>
 
               {/* Navigation Tabs */}
-              <div className='flex justify-between items-center mb-6 border-b 
-              border-gray-300 py-1 mt-4'>
-                <div>
+              <div className='flex justify-between items-center mb-6 border-b border-gray-300 py-3 mt-4'>
 
-                </div>
-                <div className='flex items-center gap-2'>
-                  <activeSection.icon className='size-5 text-gray-500' />
-                  <span className='font-medium text-gray-700'>{activeSection.name}</span>
-                </div>
-                <div className='flex items-center'>
-                  {activeSectionIndex !== 0 && (
-                    <button onClick={() => setActiveSectionIndex(prev => Math.max(0, prev - 1))}
-                      className='flex items-center gap-1 p-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all'>
-                      <ChevronLeft className='size-4' /> Previous
+                {/* Template Selector*/}
+                <TemplateSelector
+                  selectedTemplate={resumeData.template}
+                  onChange={(template) => setResumeData(prev => ({ ...prev, template }))}
+                />
+
+                <div className='flex items-center gap-4'>
+                  {/* Current Section Indicator */}
+                  <div className='flex items-center gap-2 max-sm:hidden'>
+                    <activeSection.icon className='size-5 text-gray-400' />
+                    <span className='font-medium text-gray-600 text-sm'>{activeSection.name}</span>
+                  </div>
+
+                  {/* Prev/Next Buttons */}
+                  <div className='flex items-center border-l pl-4 border-gray-200'>
+                    {activeSectionIndex !== 0 && (
+                      <button
+                        onClick={() => setActiveSectionIndex(prev => Math.max(0, prev - 1))}
+                        className='flex items-center gap-1 p-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all'
+                      >
+                        <ChevronLeft className='size-4' />
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => setActiveSectionIndex(prev => Math.min(sections.length - 1, prev + 1))}
+                      className={`flex items-center gap-1 p-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all ${activeSectionIndex === sections.length - 1 && 'opacity-50'}`}
+                      disabled={activeSectionIndex === sections.length - 1}
+                    >
+                      <span className="max-sm:hidden">Next</span> <ChevronRight className='size-4' />
                     </button>
-                  )}
-                  <button onClick={() => setActiveSectionIndex(prev => Math.min(sections.length - 1, prev + 1))}
-                    className={`flex items-center gap-1 p-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all ${activeSectionIndex === sections.length - 1 && 'opacity-50'}`}
-                    disabled={activeSectionIndex === sections.length - 1}>
-                    Next <ChevronRight className='size-4' />
-                  </button>
+                  </div>
                 </div>
               </div>
 
