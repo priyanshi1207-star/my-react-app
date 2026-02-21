@@ -77,7 +77,11 @@ const ResumeBuilder = () => {
               ></div>
 
               {/* Navigation Tabs */}
-              <div className='flex justify-between items-center mb-6 border-b border-gray-300 py-1 mt-4'>
+              <div className='flex justify-between items-center mb-6 border-b 
+              border-gray-300 py-1 mt-4'>
+                <div>
+
+                </div>
                 <div className='flex items-center gap-2'>
                   <activeSection.icon className='size-5 text-gray-500' />
                   <span className='font-medium text-gray-700'>{activeSection.name}</span>
