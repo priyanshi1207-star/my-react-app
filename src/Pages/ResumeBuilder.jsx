@@ -5,6 +5,7 @@ import { ArrowLeftIcon, AwardIcon, BriefcaseIcon, ChevronLeft, ChevronRight, Fil
 import PersonalInfoForm from '../Components/PersonalInfoForm'
 import ResumePreview from '../Components/ResumePreview'
 import TemplateSelector from '../Components/TemplateSelector'
+import ColorPicker from '../Components/ColorPicker'
 
 const ResumeBuilder = () => {
   const { resumeId } = useParams()
@@ -84,6 +85,12 @@ const ResumeBuilder = () => {
                 <TemplateSelector
                   selectedTemplate={resumeData.template}
                   onChange={(template) => setResumeData(prev => ({ ...prev, template }))}
+                />
+
+                {/* Color Picker */}
+                <ColorPicker
+                  selectedColor={resumeData.accent_color}
+                  onChange={(color) => setResumeData(prev => ({ ...prev, accent_color: color }))}
                 />
 
                 <div className='flex items-center gap-4'>
