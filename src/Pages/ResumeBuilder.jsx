@@ -65,24 +65,22 @@ const ResumeBuilder = () => {
         </Link>
       </div>
 
-      {/* Increased max-width to 8xl to allow the boxes to grow */}
-      <div className='max-w-[1400px] mx-auto px-4 pb-8'>
-
-        {/* Main Grid Container */}
+      <div className='max-w-7xl mx-auto px-4 pb-8'>
         <div className='grid lg:grid-cols-12 gap-8'>
 
-          {/* LEFT - Resume Editor: Changed from col-span-5 to col-span-7 */}
-          <div className='relative lg:col-span-7'>
-            <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-8 pt-1 overflow-hidden relative min-h-[600px]'>
-
+          {/* Left - Resume Editor */}
+          <div className='relative lg:col-span-5'>
+            <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 pt-1 overflow-hidden relative'>
               {/* Progress Bar */}
               <div
-                className='absolute top-0 left-0 h-1.5 bg-green-500 transition-all duration-500'
+                className='absolute top-0 left-0 h-1 bg-green-500 transition-all duration-500'
                 style={{ width: `${((activeSectionIndex + 1) * 100) / sections.length}%` }}
               ></div>
 
               {/* Navigation Tabs */}
               <div className='flex justify-between items-center mb-8 border-b border-gray-100 py-5 mt-2'>
+
+                {/* Left Side: Keeping Template and Accent Buttons */}
                 <div className='flex items-center gap-4'>
                   <TemplateSelector
                     selectedTemplate={resumeData.template}
@@ -93,29 +91,27 @@ const ResumeBuilder = () => {
                     selectedColor={resumeData.accent_color}
                     onChange={(color) => setResumeData(prev => ({ ...prev, accent_color: color }))}
                   />
-
-                  <div className='flex items-center gap-3 border-l border-gray-200 pl-4 ml-1 max-sm:hidden'>
-                    <activeSection.icon className='size-5 text-gray-400' />
-                    <span className='font-semibold text-gray-700 text-base whitespace-nowrap'>{activeSection.name}</span>
-                  </div>
                 </div>
 
-                <div className='flex items-center border-l border-gray-200 pl-4'>
+                {/* Right Side: Only Previous/Next Controls */}
+                <div className='flex items-center gap-2'>
                   {activeSectionIndex !== 0 && (
                     <button
                       onClick={() => setActiveSectionIndex(prev => Math.max(0, prev - 1))}
-                      className='p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors'
+                      className='flex items-center gap-1 p-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-all'
                     >
-                      <ChevronLeft className='size-6' />
+                      <ChevronLeft className='size-5' />
+                      <span>Previous</span>
                     </button>
                   )}
 
                   <button
                     onClick={() => setActiveSectionIndex(prev => Math.min(sections.length - 1, prev + 1))}
-                    className={`flex items-center gap-2 p-2 px-4 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-100 transition-colors ${activeSectionIndex === sections.length - 1 && 'opacity-30'}`}
+                    className={`flex items-center gap-1 p-2 px-3 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-100 transition-all ${activeSectionIndex === sections.length - 1 && 'opacity-30'}`}
                     disabled={activeSectionIndex === sections.length - 1}
                   >
-                    <span>Next</span> <ChevronRight className='size-5' />
+                    <span>Next</span>
+                    <ChevronRight className='size-5' />
                   </button>
                 </div>
               </div>
@@ -130,6 +126,7 @@ const ResumeBuilder = () => {
                     setRemoveBackground={setRemoveBackground}
                   />
                 )}
+                {/* Professional Summary*/}
                 {activeSection.id === 'professional_summary' && (
                   <ProfessionalSummary
                     data={resumeData.professional_summary}
@@ -142,15 +139,13 @@ const ResumeBuilder = () => {
             </div>
           </div>
 
-          {/* RIGHT - Resume Preview: Changed from col-span-7 to col-span-5 */}
-          <div className='lg:col-span-5 max-lg:mt-6 sticky top-6 h-fit'>
-            <div className='bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden'>
-              <ResumePreview
-                data={resumeData}
-                template={resumeData.template}
-                accentColor={resumeData.accent_color}
-              />
-            </div>
+          {/* Right - Resume Preview */}
+          <div className='lg:col-span-7 max-lg:mt-6 sticky top-6 h-fit'>
+            <ResumePreview
+              data={resumeData}
+              template={resumeData.template}
+              accentColor={resumeData.accent_color}
+            />
           </div>
 
         </div>
