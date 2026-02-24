@@ -93,7 +93,7 @@ const ExperienceForm = ({ data = [], onChange }) => {
                                     className='px-3 py-2 text-sm rounded-lg disabled:bg-gray-100' />
                             </div>
 
-                            <label>
+                            <label className='flex items-center gap-2'>
                                 <input
                                     type='checkbox'
                                     checked={experience.is_current || false}
@@ -122,8 +122,7 @@ const ExperienceForm = ({ data = [], onChange }) => {
                                     rows={4}
                                     className='w-full text-sm px-3 py-2 rounded-lg
                                 resize-none'
-                                    placeholder='Describe your key responsibilities and 
-                                achievements...'/>
+                                    placeholder='Describe your key responsibilities and achievements...' />
                             </div>
                         </div>
                     ))}
