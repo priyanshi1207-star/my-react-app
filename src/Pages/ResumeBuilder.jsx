@@ -136,12 +136,12 @@ const ResumeBuilder = () => {
                     setResumeData={setResumeData}
                   />
                 )}
-                {/*Experience Form*/}
                 {activeSection.id === 'work_experience' && (
                   <ExperienceForm
-                    data={resumeData.work_experience} // Use work_experience here
+                    data={resumeData.work_experience} // Correctly pass work_experience
                     onChange={(data) => setResumeData(prev => ({
-                      ...prev, work_experience: data
+                      ...prev,
+                      work_experience: data
                     }))}
                   />
                 )}
