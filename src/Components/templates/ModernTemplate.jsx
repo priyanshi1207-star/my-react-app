@@ -103,7 +103,7 @@ const ModernTemplate = ({ data, accentColor }) => {
 
 						<div className="space-y-6">
 							{data.project.map((p, index) => (
-								<div key={index} className="relative pl-6 border-l border-gray-200" style={{borderLeftColor: accentColor}}>
+								<div key={index} className="relative pl-6 border-l border-gray-200" style={{ borderLeftColor: accentColor }}>
 
 
 									<div className="flex justify-between items-start">
