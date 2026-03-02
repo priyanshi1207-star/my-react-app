@@ -63,31 +63,52 @@ const EducationForm = ({ data = [], onChange }) => {
 
                             <div className='grid md:grid-cols-2 gap-4'>
                                 <div className='space-y-1'>
-                                    <label className='text-xs font-semibold text-gray-500'>Company</label>
+                                    <label className='text-xs font-semibold text-gray-500'>Education</label>
                                     <input value={education.institution || ""}
                                         onChange={(e) => updateEducation(index, "institution", e.target.value)}
                                         type='text' className='w-full px-3 py-2 text-sm border 
                                         border-gray-200 rounded-md focus:ring-2 focus:ring-blue-500 outline-none'
                                         placeholder='e.g. IIM' />
                                 </div>
+
                                 <div className='space-y-1'>
-                                    <label className='text-xs font-semibold text-gray-500'>Job Title</label>
-                                    <input value={experience.position || ""} onChange={(e) => updateExperience(index, "position", e.target.value)} type='text' className='w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:ring-2 focus:ring-blue-500 outline-none' placeholder='e.g. Senior Developer' />
+                                    <label className='text-xs font-semibold text-gray-500'>
+                                        Degree</label>
+                                    <input value={education.degree || ""}
+                                        onChange={(e) => updateEducation(index, "degree", e.target.value)}
+                                        type='text' className='w-full px-3 py-2 text-sm border
+                                     border-gray-200 rounded-md focus:ring-2 focus:ring-blue-500 outline-none'
+                                        placeholder='e.g. Graduate, Post-Graduate or PHD' />
                                 </div>
+
                                 <div className='space-y-1'>
                                     <label className='text-xs font-semibold text-gray-500'>Start Date</label>
-                                    <input value={experience.start_date || ""} onChange={(e) => updateExperience(index, "start_date", e.target.value)} type='month' className='w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:ring-2 focus:ring-blue-500 outline-none' />
+                                    <input value={education.field || ""}
+                                        onChange={(e) => updateEducation(index, "field", e.target.value)}
+                                        type='text'
+                                        className='w-full px-3 py-2 text-sm border border-gray-200 
+                                    rounded-md focus:ring-2 focus:ring-blue-500 outline-none'
+                                        placeholder='field of study' />
                                 </div>
+
                                 <div className='space-y-1'>
                                     <label className='text-xs font-semibold text-gray-500'>End Date</label>
-                                    <input value={experience.end_date || ""} onChange={(e) => updateExperience(index, "end_date", e.target.value)} type='month' disabled={experience.is_current} className='w-full px-3 py-2 text-sm border border-gray-200 rounded-md disabled:bg-gray-50 text-sm' />
+                                    <input value={education.graduation_date || ""}
+                                        onChange={(e) => updateEducation(index, "graduation_date", e.target.value)}
+                                        type='month'
+                                        className='w-full px-3 py-2 text-sm border border-gray-200 
+                                    rounded-md' />
                                 </div>
+
                             </div>
 
-                            <label className='flex items-center gap-2 cursor-pointer'>
-                                <input type='checkbox' checked={experience.is_current || false} onChange={(e) => updateExperience(index, "is_current", e.target.checked)} className='rounded border-gray-300 text-blue-600' />
-                                <span className='text-xs text-gray-600'>I am currently working in this role</span>
-                            </label>
+                            <input value={education.CGPA || ""}
+                                onChange={(e) => updateEducation(index, "cgpa", e.target.value)}
+                                type='text'
+                                className='w-full px-3 py-2 text-sm border border-gray-200 
+                                    rounded-md focus:ring-2 focus:ring-blue-500 outline-none'
+                                placeholder='cgpa (optional)' />
+
 
                             <div className='space-y-1'>
                                 <label className='text-xs font-semibold text-gray-500'>Description</label>
