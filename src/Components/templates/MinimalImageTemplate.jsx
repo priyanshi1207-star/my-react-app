@@ -56,7 +56,9 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
                             <div className="space-y-10">
                                 {data.work_experience.map((exp, index) => (
                                     <div key={index}>
-                                        <div className="flex justify-between"><h3 className="font-bold">{exp.position}</h3><span className="text-[10px] text-zinc-400">{formatDate(exp.start_date)} — {exp.is_current ? "Present" : formatDate(exp.end_date)}</span></div>
+                                        <div className="flex justify-between"><h3 className="font-bold">{exp.position}</h3><span
+                                            className="text-[10px] text-zinc-400">{formatDate(exp.start_date)} — {exp.is_current ?
+                                                "Present" : formatDate(exp.end_date)}</span></div>
                                         <p className="text-sm font-semibold" style={{ color: accentColor }}>{exp.company}</p>
                                         <p className="text-sm text-zinc-600 whitespace-pre-line">{exp.description}</p>
                                     </div>
