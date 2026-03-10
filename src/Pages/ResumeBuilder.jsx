@@ -10,6 +10,7 @@ import ProfessionalSummary from '../Components/ProfessionalSummary'
 import ExperienceForm from '../Components/ExperienceForm'
 import EducationForm from '../Components/EducationForm'
 import ProjectForm from '../Components/ProjectForm'
+import SkillsForm from '../Components/SkillsForm'
 
 const ResumeBuilder = () => {
   const { resumeId } = useParams()
@@ -40,9 +41,7 @@ const ResumeBuilder = () => {
     { id: 'work_experience', name: 'Work Experience', icon: BriefcaseIcon },
     { id: 'education', name: 'Education', icon: GraduationCapIcon },
     { id: 'projects', name: 'Projects', icon: FolderIcon },
-    { id: 'certifications', name: 'Certifications', icon: AwardIcon },
-    { id: 'languages', name: 'Languages', icon: LanguagesIcon },
-    { id: 'interests', name: 'Interests', icon: HeartIcon },
+    { id: 'skills', name: 'skills', icon: SparklesIcon },
   ]
 
   const activeSection = sections[activeSectionIndex]
@@ -128,6 +127,15 @@ const ResumeBuilder = () => {
                     onChange={(data) => setResumeData(prev => ({
                       ...prev,
                       projects: data
+                    }))}
+                  />
+                )}
+                {activeSection.id === 'skills' && (
+                  <SkillsForm
+                    data={resumeData.skills || []}
+                    onChange={(data) => setResumeData(prev => ({
+                      ...prev,
+                      skills: data
                     }))}
                   />
                 )}

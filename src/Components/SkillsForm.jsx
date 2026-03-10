@@ -1,4 +1,4 @@
-import { Plus, X } from 'lucide-react'
+import { Plus, Sparkles, X } from 'lucide-react'
 import React, { useState } from 'react'
 
 const SkillsForm = ({ data, onChange }) => {
@@ -56,9 +56,18 @@ const SkillsForm = ({ data, onChange }) => {
                 </div>
             ) :
                 (
-                    <div>
+                    <div className='text-center py-6 text-gray-500'>
+                        <Sparkles className='w-10 h-10 mx-auto mb-2 text-gray-300' />
+                        <p>No Skills added yet</p>
+                        <p className='text-sm'>Add your technical and soft skills above.</p>
                     </div>
                 )}
+
+            <div className='bg-blue-50 p-3 rounded-lg'>
+                <p className='text-sm text-blue-800'>  <strong>Tip:</strong> Add 8-12 relevant skills. Include both technical skills (programming languages,
+                    tools) and soft skills (leadership, communication).</p>
+            </div>
+
         </div>
     )
 }
