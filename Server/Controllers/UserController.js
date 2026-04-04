@@ -6,8 +6,6 @@ const generateToken = (user) => {
     return jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 };
 
-
-
 //controller for user registration and login
 //POST /api/users/register
 export const registerUser = async (req, res) => {
@@ -30,9 +28,36 @@ export const registerUser = async (req, res) => {
         //Return Success Response
         const token = generateToken(newUser);
         newUser.password = undefined; // Hide password in response
-        res.status(201).json({ message: "User registered successfully", token });
+        res.status(201).json({ message: "User registered successfully", token, user: newUser });
 
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
+//controller for user login
+//POST /api/users/login
+export const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Check if user exists
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        // Check if password is correct
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        // Return success response
+        const token = generateToken(user);
+        user.password = undefined; // Hide password in response
+        res.json({ message: "User logged in successfully", token, user });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+}; 
