@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const generateToken = (user) => {
-    return jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    return jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 };
 
 
@@ -26,6 +26,12 @@ export const registerUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = await User.create({ name, email, password: hashedPassword });
         res.status(201).json({ message: "User registered successfully" });
+
+        //Return Success Response
+        const token = generateToken(newUser);
+        newUser.password = undefined; // Hide password in response
+        res.status(201).json({ message: "User registered successfully", token });
+
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
