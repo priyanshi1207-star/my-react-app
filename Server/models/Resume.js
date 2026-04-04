@@ -123,9 +123,12 @@ const resumeSchema = new mongoose.Schema({
             type: String,
             default: ''
         },
-        cgpa: {
+        gpa: {
             type: String,
             default: ''
         }
     }]
-}, { timestamps: true });
+}, { timestamps: true, minimize: false });
+
+const Resume = mongoose.model('Resume', resumeSchema);
+export default Resume;
