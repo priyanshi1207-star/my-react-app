@@ -5,6 +5,10 @@ import 'dotenv/config';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+/** Database Connection */
+import connectDB from './configs/db';
+connectDB();
+
 app.use(cors());
 app.use(express.json());
 
