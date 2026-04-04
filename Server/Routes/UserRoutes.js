@@ -7,8 +7,6 @@ const UserRouter = express.Router();
 
 UserRouter.post('/register', registerUser);
 UserRouter.post('/login', loginUser);
-
-// Use 'protect' to ensure the user is logged in before fetching profile
 UserRouter.get('/data', protect, getUserProfile);
 
 export default UserRouter;
