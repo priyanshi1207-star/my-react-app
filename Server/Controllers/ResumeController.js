@@ -2,6 +2,8 @@
 //POST: api/resumes
 import Resume from '../models/Resume.js';
 import User from '../models/User.js';
+import imagekit from '../configs/ImageKit.js';
+import fs from 'fs';
 
 
 
@@ -96,25 +98,39 @@ export const getResumeByIdPublic = async (req, res) => {
 //PUT: api/resumes/update
 export const updateResume = async (req, res) => {
     try {
-        const resume = await Resume.findById(req.params.id);
+        const Resume = await Resume.findById(req.params.id);
         const image = req.file;
-        let resumeDataCopy = JSON.parse(resume);
+        let resumeDataCopy = JSON.parse(Resume.toString());
 
-        if (!resume) {
+        if (image) {
+            const imageBufferData = fs.createReadStream(image.path);
+
+            const response = await imagekit.files.upload({
+                file: imageBufferData,
+                fileName: 'resume.png',
+                folder: 'user-resumes',
+                transformation: {
+                    pre: 'w-300,h-300,fo-face,z-0.75' +
+                        (removeBackground ? ',e-bgremove' : '')
+                }
+            });
+            resumeDataCopy.personal_info.image = response.url;
+        }
+        if (!Resume) {
             return res.status(404).json({ message: "Resume not found" });
         }
-        if (resume.user.toString() !== req.user) {
+        if (Resume.user.toString() !== req.user) {
             return res.status(401).json({ message: "Unauthorized" });
         }
         const { title, summary, skills, experience, projects, education } = req.body;
-        resume.title = title || resume.title;
-        resume.summary = summary || resume.summary;
-        resume.skills = skills || resume.skills;
-        resume.experience = experience || resume.experience;
-        resume.projects = projects || resume.projects;
-        resume.education = education || resume.education;
-        await resume.save();
-        res.json({ message: "Resume updated successfully", resume });
+        Resume.title = title || Resume.title;
+        Resume.summary = summary || Resume.summary;
+        Resume.skills = skills || Resume.skills;
+        Resume.experience = experience || Resume.experience;
+        Resume.projects = projects || Resume.projects;
+        Resume.education = education || Resume.education;
+        await Resume.save();
+        res.json({ message: "Resume updated successfully", Resume });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
