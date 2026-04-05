@@ -1,8 +1,6 @@
 import express from 'express';
-// Ensure these match the physical file names exactly
-import { registerUser, loginUser, getUserProfile } from '../Controllers/UserController';
-import protect from '../middlewares/AuthMiddleware';
-import { getUserResumes } from '../Controllers/UserController';
+import { registerUser, loginUser, getUserProfile, getUserResumes } from '../Controllers/UserController.js';
+import protect from '../middlewares/AuthMiddleware.js';
 
 const UserRouter = express.Router();
 

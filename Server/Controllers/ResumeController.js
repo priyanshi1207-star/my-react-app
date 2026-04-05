@@ -97,6 +97,9 @@ export const getResumeByIdPublic = async (req, res) => {
 export const updateResume = async (req, res) => {
     try {
         const resume = await Resume.findById(req.params.id);
+        const image = req.file;
+        let resumeDataCopy = JSON.parse(resume);
+
         if (!resume) {
             return res.status(404).json({ message: "Resume not found" });
         }

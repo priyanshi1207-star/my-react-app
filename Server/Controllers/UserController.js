@@ -11,7 +11,6 @@ const generateToken = (id) => {
 export const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
-
         if (!name || !email || !password) {
             return res.status(400).json({ message: "Please provide all required fields" });
         }
@@ -29,18 +28,37 @@ export const registerUser = async (req, res) => {
         });
 
         const token = generateToken(newUser._id);
-
-        // Send ONLY ONE response
         res.status(201).json({
             message: "User registered successfully",
             token,
-            user: {
-                id: newUser._id,
-                name: newUser.name,
-                email: newUser.email
-            }
+            user: { id: newUser._id, name: newUser.name, email: newUser.email }
         });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
 
+// POST /api/users/login
+export const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(400).json({ message: "Invalid email or password" });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid email or password" });
+        }
+
+        const token = generateToken(user._id);
+        res.json({
+            message: "Login successful",
+            token,
+            user: { id: user._id, name: user.name, email: user.email }
+        });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
@@ -49,29 +67,21 @@ export const registerUser = async (req, res) => {
 // GET /api/users/data
 export const getUserProfile = async (req, res) => {
     try {
-        // The 'protect' middleware attaches the id to req.user
         const user = await User.findById(req.user).select('-password');
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
+        if (!user) return res.status(404).json({ message: "User not found" });
         res.json(user);
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
 
-//controller for getting user resumes
-// GET: api/users/resumes
+// GET /api/users/resumes
 export const getUserResumes = async (req, res) => {
     try {
-        const user = await User.findById(req.user).select('Resume');
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        res.json(user.Resume);
-
-    }
-    catch (error) {
+        // Querying the Resume model by the user ID
+        const resumes = await Resume.find({ user: req.user });
+        res.json(resumes);
+    } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
-}; 
+};
