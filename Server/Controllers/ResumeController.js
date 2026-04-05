@@ -25,33 +25,18 @@ export const createResume = async (req, res) => {
     }
 };
 
-//Controller for Getting User Resumes
-//GET: api/users/resumes
-export const getUserResumes = async (req, res) => {
-    try {
-        const user = await User.findById(req.user).select('Resume');
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        res.json(user.Resume);
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
-};
-
-
 //controller for deleting a resume
 //DELETE: api/resumes/delete
 export const deleteResume = async (req, res) => {
     try {
-        const resume = await Resume.findById(req.params.id);
-        if (!resume) {
+        const Resume = await Resume.findById(req.params.id);
+        if (!Resume) {
             return res.status(404).json({ message: "Resume not found" });
         }
-        if (resume.user.toString() !== req.user) {
+        if (Resume.user.toString() !== req.user) {
             return res.status(401).json({ message: "Unauthorized" });
         }
-        await resume.deleteOne();
+        await Resume.deleteOne();
         res.json({ message: "Resume deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
