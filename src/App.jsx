@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import  Home  from './Pages/Home'
+import Home from './Pages/Home'
 import Layout from './Pages/Layout'
 import Dashboard from './Pages/Dashboard'
 import ResumeBuilder from './Pages/ResumeBuilder'
@@ -9,21 +9,20 @@ import Login from './Pages/Login'
 
 
 const App = () => {
-  return(
+  return (
     <>
-        <Routes>
-          <Route path='/' element={<Home />} />
-          
-          <Route path='App' element={<Layout />}>
-            <Route index element={<Dashboard />}/>
-            <Route path='builder/:resumeId' element={<ResumeBuilder />}/>
-          </Route>
+      <Routes>
+        <Route path='/' element={<Home />} />
 
-          <Route path='view/:resumeId' element={<Preview />} />
-          <Route path='Login' element={<Login />} />
+        <Route path='App' element={<Layout />}>
+          <Route index element={<Dashboard />} />
+          <Route path='builder/:resumeId' element={<ResumeBuilder />} />
+        </Route>
 
-        </Routes>
-    </>   
+        <Route path='view/:resumeId' element={<Preview />} />
+
+      </Routes>
+    </>
   )
 }
 
