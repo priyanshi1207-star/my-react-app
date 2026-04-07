@@ -1,29 +1,15 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
-import Home from './Pages/Home'
-import Layout from './Pages/Layout'
-import Dashboard from './Pages/Dashboard'
-import ResumeBuilder from './Pages/ResumeBuilder'
-import Preview from './Pages/Preview'
-import Login from './Pages/Login'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.jsx'
+import { BrowserRouter } from 'react-router-dom'
+// Add these two imports:
+import { Provider } from 'react-redux'
+import { store } from "./App/Store.js";// Ensure the path to Store.js is correct
 
-
-const App = () => {
-  return (
-    <>
-      <Routes>
-        <Route path='/' element={<Home />} />
-
-        <Route path='App' element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path='builder/:resumeId' element={<ResumeBuilder />} />
-        </Route>
-
-        <Route path='view/:resumeId' element={<Preview />} />
-
-      </Routes>
-    </>
-  )
-}
-
-export default App
+createRoot(document.getElementById('root')).render(
+  <Provider store={store}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>
+)
