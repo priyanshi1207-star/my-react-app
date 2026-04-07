@@ -1,5 +1,5 @@
 import { FilePenLineIcon, PlusIcon, UploadCloudIcon, Trash2, Pencil, XIcon, UploadCloud } from 'lucide-react'
-import React, { useState, useEffect, use } from 'react'
+import React, { useState, useEffect } from 'react'
 import { dummyResumeData } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
 

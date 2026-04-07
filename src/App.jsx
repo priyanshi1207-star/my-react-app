@@ -1,15 +1,44 @@
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-import { BrowserRouter } from 'react-router-dom'
-// Add these two imports:
-import { Provider } from 'react-redux'
-import { store } from "./App/Store.js";// Ensure the path to Store.js is correct
+import React from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import Home from './Pages/Home.jsx'
+import Layout from './Pages/Layout.jsx'
+import Dashboard from './Pages/Dashboard.jsx'
+import ResumeBuilder from './Pages/ResumeBuilder.jsx'
+import Preview from './Pages/Preview.jsx'
+import Login from './Pages/Login.jsx'
+import { useDispatch } from 'react-redux'
+import API from './configs/Api.js'
 
-createRoot(document.getElementById('root')).render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </Provider>
-)
+const App = () => {
+
+  const dispatch = useDispatch()
+
+  const getUserData = async () => {
+    const token = localStorage.getItem('token')
+    try {
+      if (token) {
+        const { data } = await API.get('/api/users/data', { headers: { Authorization: token } })
+        if (data.user) {
+          dispatch(login({ token, user: data.user }))
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error)
+    }
+  }
+
+  return (
+    <Routes>
+      <Route path='/' element={<Home />} />
+      <Route path='/login' element={<Login />} />
+      <Route path='/app' element={<Layout />}>
+        <Route index element={<Dashboard />} />
+        <Route path='builder/:resumeId' element={<ResumeBuilder />} />
+      </Route>
+      <Route path='/view/:resumeId' element={<Preview />} />
+      <Route path='*' element={<Navigate to='/' replace />} />
+    </Routes>
+  )
+}
+
+export default App
