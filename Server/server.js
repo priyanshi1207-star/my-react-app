@@ -9,17 +9,25 @@ import OpenAIRoutes from './Routes/AiRoutes.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Connect to Database
-connectDB();
+const startServer = async () => {
+    try {
+        await connectDB();
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+        // Middleware
+        app.use(cors());
+        app.use(express.json());
 
-// Routes
-app.get('/', (req, res) => res.send("Server is Live..."));
-app.use('/api/users', UserRouter);
-app.use('/api/resumes', ResumeRouter);
-app.use('/api/openai', OpenAIRoutes);
+        // Routes
+        app.get('/', (req, res) => res.send("Server is Live..."));
+        app.use('/api/users', UserRouter);
+        app.use('/api/resumes', ResumeRouter);
+        app.use('/api/openai', OpenAIRoutes);
 
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+        app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+    } catch (error) {
+        console.error("Failed to start server:", error.message);
+        process.exit(1);
+    }
+};
+
+startServer();
