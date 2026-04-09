@@ -1,4 +1,3 @@
-import { FileEdit } from "lucide-react";
 import mongoose from "mongoose";
 
 const resumeSchema = new mongoose.Schema({
