@@ -75,15 +75,34 @@ const Dashboard = () => {
   }
 
   const editTitle = async (event) => {
-    event.preventDefault()
-    setShowEditResumeId('')
+    try {
+      event.preventDefault()
+      const { data } = await API.put(`/api/resumes/update/${editResumeId}`, { title }, { headers: { Authorization: token } })
+      setAllResumes(allResumes.map(resume => resume._id === editResumeId ? { ...resume, title: data.resume.title } : resume))
+      setTitle('')
+      setShowEditResumeId('')
+      toast.success(data.message)
+    }
+    catch (error) {
+      toast.error(error?.response?.data?.message || error.message)
+    }
   }
 
+
+
   const deleteResume = async (resumeId) => {
-    const confirm = window.confirm("Are you sure want to delete this resume?")
-    if (confirm) {
-      setAllResumes(prev => prev.filter(resume => resume._id !== resumeId))
+    try {
+      const confirm = window.confirm("Are you sure want to delete this resume?")
+      if (confirm) {
+        const { data } = await API.delete(`/api/resumes/delete/${resumeId}`, { headers: { Authorization: token } })
+        setAllResumes(allResumes.filter(resume => resume._id !== resumeId))
+        toast.success(data.message)
+      }
     }
+    catch (error) {
+      toast.error(error?.response?.data?.message || error.message)
+    }
+
   }
 
 
@@ -200,7 +219,7 @@ const Dashboard = () => {
               <button className='w-full py-2 bg-green-600 text-white rounded hover:bg-green-700
               transition-colors'>
                 {isloading && <LoaderCircle className='animate-spin size-4 text-white' />}
-                Upload Resume
+                {isloading ? 'Uploading...' : 'Upload Resume'}
               </button>
               <XIcon className='absolute top-4 right-4 text-slate-400
               hover:text-slate-600 cursor-pointer transition-colors'
