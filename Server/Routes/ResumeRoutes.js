@@ -16,7 +16,7 @@ const ResumeRouter = express.Router();
 ResumeRouter.post('/create', protect, createResume);
 ResumeRouter.post('/upload', protect, uploadResume);
 ResumeRouter.delete('/delete/:id', protect, deleteResume);
-ResumeRouter.put('/update/:id', upload.single('image'), protect, updateResume);
+ResumeRouter.put('/update/:id', protect, upload.single('image'), updateResume);
 
 // Public or ID-based Routes
 ResumeRouter.get('/get/:id', getResumeById);

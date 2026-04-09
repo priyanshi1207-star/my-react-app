@@ -74,12 +74,13 @@ const ResumeBuilder = () => {
       const formData = new FormData()
       formData.append("resumeId", resumeId)
       formData.append("resumeData", JSON.stringify({ public: !resumeData.public }))
-      const { data } = await API.put(`/api/resumes/update`, formData, { headers: { Authorization: token } })
+      const { data } = await API.put(`/api/resumes/update/${resumeId}`, formData, { headers: { Authorization: token } })
       setResumeData({ ...resumeData, public: !resumeData.public })
       toast.success(data.message)
     }
     catch (error) {
       console.error("Error saving Resume:", error.message)
+      toast.error("Failed to update visibility")
     }
   }
 
@@ -100,24 +101,33 @@ const ResumeBuilder = () => {
 
   const saveResume = async () => {
     try {
-      let updatedResumeData = structuredClone(resumeData)
-      //remove image from updatedResumeData
-      if (typeof updatedResumeData.personal_info?.profile_image === 'object') {
+      let updatedResumeData = structuredClone(resumeData);
+
+      // Extract file if user selected a new image
+      const imageFile = resumeData.personal_info?.profile_image?.file;
+
+      // Remove the file/preview object from JSON to keep payload clean
+      if (updatedResumeData.personal_info?.profile_image) {
         delete updatedResumeData.personal_info.profile_image;
       }
-      const formData = new FormData()
-      formData.append("resumeId", resumeId)
-      formData.append("resumeData", JSON.stringify(updatedResumeData))
-      removeBackground && formData.append("removeBackground", "yes")
-      typeof resumeData.personal_info?.profile_image === 'object' && formData.append("image", resumeData.personal_info.profile_image.file)
-      const { data } = await API.put(`/api/resumes/update`, formData, { headers: { Authorization: token } })
-      setResumeData(data.resume)
-      toast.success(data.message)
+
+      const formData = new FormData();
+      formData.append("resumeData", JSON.stringify(updatedResumeData));
+
+      if (removeBackground) formData.append("removeBackground", "yes");
+      if (imageFile) formData.append("image", imageFile); // Matches upload.single('image')
+
+      const { data } = await API.put(`/api/resumes/update/${resumeId}`, formData, {
+        headers: { Authorization: token }
+      });
+
+      setResumeData(data.resume);
+      toast.success(data.message);
+    } catch (error) {
+      const errorMsg = error.response?.data?.message || "Server error";
+      toast.error("Failed to save: " + errorMsg);
     }
-    catch (error) {
-      console.error("Error saving Resume:", error.message)
-    }
-  }
+  };
 
   return (
     /* Added print:p-0 to root to ensure no margins in PDF */
@@ -194,7 +204,7 @@ const ResumeBuilder = () => {
                     onChange={(data) => setResumeData(prev => ({ ...prev, skills: data }))} />
                 )}
               </div>
-              <button className='bg-gradient-to-br from-green-100 to-green-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm'>
+              <button onClick={() => { toast.promise(saveResume, { loading: "Saving changes..." }) }} className='bg-gradient-to-br from-green-100 to-green-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm'>
                 Save Changes
               </button>
             </div>

@@ -1,26 +1,7 @@
 import Resume from '../models/Resume.js';
 
-// POST: api/resumes/create
-export const createResume = async (req, res) => {
-    try {
-        const { title, summary, skills, experience, projects, education } = req.body;
-        const newResume = await Resume.create({
-            user: req.user, // Injected by AuthMiddleware
-            title,
-            summary,
-            skills,
-            experience,
-            projects,
-            education
-        });
-        res.status(201).json({ message: "Resume created successfully", resume: newResume });
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
-};
-
-// DELETE: api/resumes/delete/:id
-export const deleteResume = async (req, res) => {
+// PUT: api/resumes/update/:id
+export const updateResume = async (req, res) => {
     try {
         const resume = await Resume.findById(req.params.id);
         if (!resume) return res.status(404).json({ message: "Resume not found" });
@@ -30,58 +11,54 @@ export const deleteResume = async (req, res) => {
             return res.status(401).json({ message: "Unauthorized" });
         }
 
-        await resume.deleteOne();
-        res.json({ message: "Resume deleted successfully" });
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
-};
+        let updateData = {};
 
-// GET: api/resumes/get/:id
-export const getResumeById = async (req, res) => {
-    try {
-        const resume = await Resume.findById(req.params.id).select('-__v -createdAt -updatedAt');
-        if (!resume) return res.status(404).json({ message: "Resume not found" });
-        res.status(200).json({ resume });
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
-};
+        // 1. Parse the stringified JSON from FormData
+        if (req.body.resumeData) {
+            try {
+                updateData = JSON.parse(req.body.resumeData);
+            } catch (parseError) {
+                return res.status(400).json({ message: "Invalid resume data format" });
+            }
+        } else {
+            // Fallback for direct JSON requests
+            updateData = req.body;
+        }
 
-// GET: api/resumes/public/:id
-export const getResumeByIdPublic = async (req, res) => {
-    try {
-        const resume = await Resume.findById(req.params.id)
-            .populate('user', 'name email')
-            .select('-__v -createdAt -updatedAt');
+        // 2. Map fields to Schema (Fixing typos)
+        if (updateData.title !== undefined) resume.title = updateData.title;
 
-        if (!resume) return res.status(404).json({ message: "Resume not found" });
-        res.status(200).json({ resume });
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
-};
+        // Corrected typo from professional_Summary to professional_summary
+        if (updateData.professional_summary !== undefined) {
+            resume.professional_summary = updateData.professional_summary;
+        } else if (updateData.summary !== undefined) {
+            resume.professional_summary = updateData.summary;
+        }
 
-// PUT: api/resumes/update/:id
-export const updateResume = async (req, res) => {
-    try {
-        const resume = await Resume.findById(req.params.id);
-        if (!resume) return res.status(404).json({ message: "Resume not found" });
+        if (updateData.skills !== undefined) resume.skills = updateData.skills;
+        if (updateData.work_experience !== undefined) resume.experience = updateData.work_experience;
+        if (updateData.projects !== undefined) resume.projects = updateData.projects;
+        if (updateData.education !== undefined) resume.education = updateData.education;
+        if (updateData.template !== undefined) resume.template = updateData.template;
+        if (updateData.accent_color !== undefined) resume.accent_color = updateData.accent_color;
+        if (updateData.public !== undefined) resume.public = updateData.public;
 
-        const { title, summary, skills, experience, projects, education } = req.body;
+        // 3. Safe Merge for Personal Info
+        if (updateData.personal_info !== undefined) {
+            resume.personal_info = { ...resume.personal_info, ...updateData.personal_info };
+        }
 
-        resume.title = title || resume.title;
-        resume.summary = summary || resume.summary;
-        resume.skills = skills || resume.skills;
-        resume.experience = experience || resume.experience;
-        resume.projects = projects || resume.projects;
-        resume.education = education || resume.education;
-
-        // If you have image logic, handle req.file here
+        // 4. Handle uploaded file from Multer
+        if (req.file) {
+            if (!resume.personal_info) resume.personal_info = {};
+            // Ensure your schema has personal_info.image
+            resume.personal_info.image = req.file.path;
+        }
 
         await resume.save();
         res.json({ message: "Resume updated successfully", resume });
     } catch (error) {
+        console.error("Update resume error:", error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
