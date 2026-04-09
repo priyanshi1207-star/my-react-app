@@ -54,12 +54,26 @@ const ResumeBuilder = () => {
 
   const activeSection = sections[activeSectionIndex]
 
+  const normalizeResumeData = (resume) => ({
+    ...resume,
+    professional_summary: resume.professional_summary ?? resume.professional_Summary ?? '',
+    work_experience: resume.work_experience ?? resume.experience ?? [],
+    education: resume.education ?? [],
+    skills: resume.skills ?? [],
+    projects: resume.projects ?? [],
+    personal_info: resume.personal_info ?? {},
+    template: resume.template ?? 'classic',
+    accent_color: resume.accent_color ?? '#3b82f6',
+    public: resume.public ?? false,
+  });
+
   const loadExistingResume = async () => {
     try {
-      const { data } = await API.get(`/api/resumes/${resumeId}`, { headers: { Authorization: token } })
+      const { data } = await API.get(`/api/resumes/get/${resumeId}`, { headers: { Authorization: token } })
       if (data.resume) {
-        setResumeData(data.resume)
-        document.title = data.resume.title;
+        const normalized = normalizeResumeData(data.resume);
+        setResumeData(normalized);
+        document.title = normalized.title;
       }
     }
     catch (error) {
@@ -75,7 +89,7 @@ const ResumeBuilder = () => {
       formData.append("resumeId", resumeId)
       formData.append("resumeData", JSON.stringify({ public: !resumeData.public }))
       const { data } = await API.put(`/api/resumes/update/${resumeId}`, formData, { headers: { Authorization: token } })
-      setResumeData({ ...resumeData, public: !resumeData.public })
+      setResumeData(normalizeResumeData(data.resume))
       toast.success(data.message)
     }
     catch (error) {
@@ -121,7 +135,7 @@ const ResumeBuilder = () => {
         headers: { Authorization: token }
       });
 
-      setResumeData(data.resume);
+      setResumeData(normalizeResumeData(data.resume));
       toast.success(data.message);
     } catch (error) {
       const errorMsg = error.response?.data?.message || "Server error";
@@ -183,7 +197,8 @@ const ResumeBuilder = () => {
                 )}
                 {activeSection.id === 'professional_summary' && (
                   <ProfessionalSummary data={resumeData.professional_summary}
-                    onChange={(data) => setResumeData(prev => ({ ...prev, professional_summary: data }))} />
+                    onChange={(data) => setResumeData(prev => ({ ...prev, professional_summary: data }))}
+                    setResumeData={setResumeData} />
                 )}
                 {activeSection.id === 'work_experience' && (
                   <ExperienceForm data={resumeData.work_experience}
@@ -204,7 +219,7 @@ const ResumeBuilder = () => {
                     onChange={(data) => setResumeData(prev => ({ ...prev, skills: data }))} />
                 )}
               </div>
-              <button onClick={() => { toast.promise(saveResume, { loading: "Saving changes..." }) }} className='bg-gradient-to-br from-green-100 to-green-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm'>
+              <button onClick={() => { toast.promise(saveResume(), { loading: "Saving changes..." }) }} className='bg-gradient-to-br from-green-100 to-green-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm'>
                 Save Changes
               </button>
             </div>

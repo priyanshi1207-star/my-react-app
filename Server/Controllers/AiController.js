@@ -4,6 +4,10 @@ import Resume from "../models/Resume.js"; // Corrected path
 // Enhance professional summary
 export const enhanceProfessionalSummary = async (req, res) => {
     try {
+        if (!openai) {
+            return res.status(503).json({ message: "OpenAI API key is not configured or invalid. Set OPENAI_API_KEY to a valid OpenAI secret key starting with sk-." });
+        }
+
         const { summary } = req.body;
         if (!summary) {
             return res.status(400).json({ message: "Professional summary is required" });
@@ -21,6 +25,7 @@ export const enhanceProfessionalSummary = async (req, res) => {
         const enhancedSummary = response.choices[0].message.content;
         return res.status(200).json({ enhancedSummary });
     } catch (error) {
+        console.error('Enhance professional summary error:', error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
@@ -28,6 +33,10 @@ export const enhanceProfessionalSummary = async (req, res) => {
 // Enhance job descriptions
 export const enhanceJobDescriptions = async (req, res) => {
     try {
+        if (!openai) {
+            return res.status(503).json({ message: "OpenAI API key is not configured or invalid. Set OPENAI_API_KEY to a valid OpenAI secret key starting with sk-." });
+        }
+
         const { jobDescriptions } = req.body;
         if (!jobDescriptions || !Array.isArray(jobDescriptions)) {
             return res.status(400).json({ message: "Job descriptions array is required" });
@@ -49,6 +58,7 @@ export const enhanceJobDescriptions = async (req, res) => {
         // Assuming AI returns { "descriptions": [...] }
         return res.status(200).json({ enhancedJobDescriptions: result.descriptions || result });
     } catch (error) {
+        console.error('Enhance job descriptions error:', error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
