@@ -2,7 +2,7 @@ import { Lock, Mail, User2 } from 'lucide-react'
 import React from 'react'
 import API from '../configs/Api'
 import { useDispatch } from 'react-redux'
-import { login } from '../App/features/auth/authSlice'
+import { login } from '../App/Features/auth/authSlice'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 

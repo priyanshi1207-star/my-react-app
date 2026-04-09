@@ -8,7 +8,7 @@ import Preview from './Pages/Preview.jsx'
 import Login from './Pages/Login.jsx'
 import { useDispatch } from 'react-redux'
 import API from './configs/Api.js'
-import { login, setLoading } from './App/features/auth/authSlice.js'
+import { login, setLoading } from './App/Features/auth/authSlice.js'
 import { Toaster } from 'react-hot-toast'
 const App = () => {
 

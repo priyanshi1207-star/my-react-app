@@ -56,32 +56,59 @@ export const enhanceJobDescriptions = async (req, res) => {
 // Extract and Upload Resume
 export const uploadResume = async (req, res) => {
     try {
-        const { title, summary, skills, experience, projects, education } = req.body;
+        const { title, summary, skills, experience, projects, education, content } = req.body;
         const userId = req.user;
 
-        if (!title || !summary) {
-            return res.status(400).json({ message: "Title and summary are required" });
+        const textSource = content || summary;
+        if (!title || !textSource) {
+            return res.status(400).json({ message: "Title and resume content or summary are required" });
         }
 
         const systemPrompt = "You are an expert AI Agent. Extract resume data into structured JSON matching the user's requested schema.";
-        const userPrompt = `Extract data from: Title: ${title}, Summary: ${summary}, Skills: ${skills}. 
-        Return a JSON object with keys: professional_Summary, skills, personal_info, experience, projects, education.`;
+        const userPrompt = `Extract data from the resume text below. Title: ${title}. Resume Text: ${textSource}. Skills: ${skills || ''}. Return a JSON object with keys: professional_Summary, skills, personal_info, experience, projects, education.`;
 
-        const response = await openai.chat.completions.create({
-            model: process.env.OPENAI_MODEL || "gpt-4-turbo-preview",
-            messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: userPrompt },
-            ],
-            response_format: { type: "json_object" }
-        });
+        let parsedData = null;
+        if (process.env.OPENAI_API_KEY) {
+            try {
+                const response = await openai.chat.completions.create({
+                    model: process.env.OPENAI_MODEL || "gpt-4-turbo-preview",
+                    messages: [
+                        { role: "system", content: systemPrompt },
+                        { role: "user", content: userPrompt },
+                    ],
+                });
+                const contentText = response.choices?.[0]?.message?.content || '';
+                try {
+                    parsedData = JSON.parse(contentText);
+                } catch (parseError) {
+                    console.error('AI parse failed:', parseError.message, contentText);
+                }
+            } catch (aiError) {
+                console.error('OpenAI error:', aiError.message, aiError);
+            }
+        }
 
-        const parsedData = JSON.parse(response.choices[0].message.content);
+        if (!parsedData) {
+            parsedData = {
+                professional_Summary: textSource,
+                skills: [],
+                personal_info: {},
+                experience: [],
+                projects: [],
+                education: []
+            };
+        }
 
         // Save to Database
         const newResume = await Resume.create({
             user: userId, // Ensure your schema uses 'user' or 'userId' consistently
-            ...parsedData
+            title,
+            professional_Summary: parsedData.professional_Summary || parsedData.summary || textSource,
+            skills: parsedData.skills || [],
+            experience: parsedData.experience || [],
+            projects: parsedData.projects || [],
+            education: parsedData.education || [],
+            personal_info: parsedData.personal_info || parsedData.personalInfo || {}
         });
 
         return res.status(200).json({ message: "Resume uploaded successfully", resume: newResume });
